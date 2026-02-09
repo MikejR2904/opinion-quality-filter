@@ -1,0 +1,28 @@
+{
+  "name": "context_feature",
+  "vectors": {
+    "embedding": {
+      "size": 768,
+      "distance": "Cosine"
+    }
+  },
+  "payload_schema": {
+    "chunk_id": "keyword",
+    "place_id": "keyword",
+    "name": "keyword",
+    "category": "keyword",
+    "address": "keyword",
+    "lat": "float",
+    "lng": "float",
+    "avg_rating": "float",
+    "num_reviews": "integer",
+    "text_chunk": "keyword",
+    "coverage_score": "float",
+    "grounding_score": "float",
+    "token_count": "keyword",
+    "source_type": "keyword",
+    "source_url": "keyword",
+    "section_title": "keyword",
+    "retrieval_timestamp": "datetime"
+  }
+}
