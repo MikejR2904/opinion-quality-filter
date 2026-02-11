@@ -7,6 +7,8 @@ BASE_DIR = os.path.dirname(__file__)
 sql_path = os.path.join(BASE_DIR, 'postgresql', 'tables.sql')
 qdrant_path = os.path.join(BASE_DIR, 'qdrant')
 
+load_dotenv()
+
 def init_postgres_schema():
     conn = establish_postgres_connection()
     cursor = conn.cursor()

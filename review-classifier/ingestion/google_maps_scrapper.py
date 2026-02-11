@@ -200,25 +200,39 @@ def extract_reviews(driver: webdriver.Chrome, max_reviews: int = 10) -> List[Dic
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label*='Reviews']"))
             )
             driver.execute_script("arguments[0].click();", reviews_button)
-            time.sleep(2)
+            time.sleep(3)
         except Exception as e:
             print(f"Could not find reviews tab: {e}")
             return reviews
         # Locate the reviews container and scroll to load more reviews
         try:
             scroll_container = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='region'], div[aria-label*='reviews']"))
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div.m6QErb.DxyBCb.kA9KIf.dS8AEf"))
             )
         except Exception as e:
             scroll_container = driver.find_element(By.TAG_NAME, "body")
         seen_ids = set() # To avoid duplicates
+        stall_count, MAX_STALL = 0, 5 # Avoid stalling when loading new reviews
+        scroll_attempts, MAX_SCROLL_ATTEMPTS = 0, 20
         # Scroll and collect reviews until max_reviews reached
-        while len(reviews) < max_reviews:
+        while len(reviews) < max_reviews and scroll_attempts < MAX_SCROLL_ATTEMPTS:
+            scroll_attempts += 1
+            last_h = driver.execute_script("return arguments[0].scrollHeight", scroll_container)
             containers = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
+            new_found = False
             for container in containers:
                 review_id = container.get_attribute("data-review-id")
                 if review_id in seen_ids:
                     continue
+                new_found = True
+                # Click "More" button if it exists. This only happens if the review text is long enough.
+                try:
+                    more_button = container.find_elements(By.CSS_SELECTOR, "button.w8B6B, button[aria-label='See more']")
+                    if more_button:
+                        driver.execute_script("arguments[0].click();", more_button[0])
+                        time.sleep(0.5)
+                except:
+                    pass
                 review_data: Dict = {
                     "author_name": None,
                     "rating": None,
@@ -259,9 +273,17 @@ def extract_reviews(driver: webdriver.Chrome, max_reviews: int = 10) -> List[Dic
                     break
             # Scroll down to load more reviews
             driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scroll_container)
-            time.sleep(1.5)
-            if len(seen_ids) >= len(containers): # Stop if no new reviews are loaded
-                break
+            time.sleep(2)
+            new_h = driver.execute_script("return arguments[0].scrollHeight", scroll_container)
+            if new_h == last_h and not new_found:
+                driver.execute_script("arguments[0].scrollTop += 500", scroll_container)
+                time.sleep(0.5)
+                driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scroll_container)
+                stall_count += 1
+                if stall_count >= MAX_STALL:
+                    break
+            else:
+                stall_count = 0
     except Exception as e:
         print(f"Error extracting reviews: {e}")
     return reviews
@@ -270,9 +292,10 @@ def extract_reviews(driver: webdriver.Chrome, max_reviews: int = 10) -> List[Dic
 def parse_relative_time(relative_time: str) -> Optional[datetime]:
     try:
         now = datetime.now()
-        match = re.match(r'(\d+)\s+(minute|hour|day|week|month|year)s?\s+ago', relative_time)
+        pattern = re.compile(r'(\d+|a)\s+(minute|hour|day|week|month|year)s?\s+ago', re.IGNORECASE)
+        match = pattern.search(relative_time)
         if match:
-            value = int(match.group(1))
+            value = int(match.group(1)) if match.group(1) != 'a' else 1 # Handle e.g. a day ago case
             unit = match.group(2)
             if unit == 'minute':
                 return now - timedelta(minutes=value)
@@ -311,39 +334,35 @@ def save_to_csv(profiles: List[Dict], filename: str) -> None:
         print("[WARNING] No data to save.")
         return
     df = pd.DataFrame(flattened_profiles)
-    df.to_csv(filename, index=False, encoding='utf-8-sig')
+    df.to_csv(filename, mode="a", header=None, index=False, encoding='utf-8-sig')
     print(f"Saved data to {filename}")
 
+## Overall scrapping logic (query -> scrapper -> data fetched and trigger RAG ingestion to execute)
+def scrap_google_maps(query: str, max_locations: int = 10, max_reviews: int = 10) -> None:
+    driver = get_chrome_driver()
+    open_google_maps(driver)
+    search_location(driver, query)
+    scraping_type = detect_scraping_type(driver)
+    all_results = []
+    if scraping_type == "bulk":
+        listings = get_business_url(driver, max_locations)
+        for url in listings:
+            driver.get(url)
+            profile = extract_business_profile(driver)
+            reviews = extract_reviews(driver, max_reviews)
+            profile["reviews"] = reviews
+            all_results.append(profile)
+            driver.back()
+            time.sleep(2)
+    else:
+        profile = extract_business_profile(driver)
+        reviews = extract_reviews(driver, max_reviews)
+        profile["reviews"] = reviews
+        all_results.append(profile)
+    ## TO DO: Trigger RAG data collector system to fetch contexts
+
+    driver.quit()
+    save_to_csv(all_results, "data/raw/google_places/google_maps_reviews.csv")
+
 # # Test script
-# driver = get_chrome_driver()
-# print("[INFO] Opening Google Maps...")
-# open_google_maps(driver)
-# print("[INFO] Searching for 'Starbucks Singapore'...")
-# search_location(driver, "Starbucks Singapore")
-# print("[INFO] Detecting scraping type...")
-# scraping_type = detect_scraping_type(driver)
-# all_results = []
-# if scraping_type == "bulk":
-#     print("[INFO] Scraping multiple business listings...")
-#     listings = get_business_url(driver, max_locations=2)
-#     print(f"[INFO] Found {len(listings)} business listings.")
-#     for url in listings:
-#         print(f"[INFO] Navigating to: {url}")
-#         driver.get(url)
-#         profile = extract_business_profile(driver)
-#         reviews = extract_reviews(driver, max_reviews=3)
-#         profile["reviews"] = reviews
-#         all_results.append(profile)
-#         driver.back()
-#         time.sleep(2)
-# else:
-#     print("[INFO] Scraping single business listing...")
-#     profile = extract_business_profile(driver)
-#     reviews = extract_reviews(driver, max_reviews=5)
-#     profile["reviews"] = reviews
-#     all_results.append(profile)
-
-# for p in all_results:
-#     print(p)
-
-# save_to_csv(all_results, "../../data/raw/google_places/starbucks_singapore_reviews.csv")
+# scrap_google_maps("Starbucks Singapore", 2, 5)
