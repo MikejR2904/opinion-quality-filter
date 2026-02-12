@@ -1,0 +1,23 @@
+{
+  "name": "opinion-quality-filter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MikejR2904/opinion-quality-filter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MikejR2904/opinion-quality-filter/issues"
+  },
+  "homepage": "https://github.com/MikejR2904/opinion-quality-filter#readme",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

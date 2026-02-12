@@ -1,0 +1,29 @@
+BASE_URL: https://www.luckincoffee.com.sg/
+PAGES_SCRAPED: https://www.luckincoffee.com.sg/, https://www.luckincoffee.com.sg/about, https://www.luckincoffee.com.sg/our-story
+
+==================================================
+--- Source: https://www.luckincoffee.com.sg/ ---
+At Luckin Coffee, we pride ourselves on using only the finest Arabica beans sourced directly from top coffee producing regions.
+Every batch of our coffee is carefully tested and blended by our team of the WBC champions,hailing from Poland, Italy, Japan, Australia and China.
+We guarantee that every cup of our coffee is made fresh just for you, ensuring that you experience the full depth of flavor and aroma with every sip.
+We are proud to present you high-quality Arabica beans
+Our coffee is selected from more than 180 blending formulas that highly matches the taste of consumers.
+Every batch of our coffee is carefully tested and blended by our team of the
+WBC champions,hailing from Brazil, Poland, Italy, Japan, Australia and China.
+2018 World Barista Championship First Female World Champion
+2022 World Coffee In Good Spirits Championship World Champion
+We use state-of-the-art SCHAERER coffee machines from Switzerland in all of our outlets. By adopting internationally advanced technology and equipment to roast and grind our high quality coffee beans, to truly achieving "freshly roasted and freshly grounded".
+20,000 stores and counting, covering 300+ cities worldwide
+
+--- Source: https://www.luckincoffee.com.sg/about ---
+Luckin Coffee is a new leading retail coffee company. Pioneering new technology-driven retail model, Luckin Coffee aims to provide high quality coffee and products with great affordability, and convenience to our customers.
+Our coffee beans come directly from top coffee producing regions, and we have won the gold medal of IIAC for seven consecutive years. Every batch of our coffee is carefully blended by our team of the WBC champions. Our coffee is selected from more than 180 blending formulas that highly match the taste of customers.
+We advocate a more convenient and rapid "new retail" experience. Users can purchase, pick up and take out coffee through our mobile app, completely changing the traditional coffee business mode. Experience the ultimate convenience with every cup of coffee carefully crafted and freshly made, just for you.
+Our mobile app and presence on other third-party platforms cover the entire customer purchase process, offering our customers a 100% cashier-less environment. This enhances our customer experience, improves our operating efficiency, and allows us to stay connected with our customers and engage with them anytime, anywhere.
+
+--- Source: https://www.luckincoffee.com.sg/our-story ---
+Luckin Coffee is a pioneer of a technology-driven new retail model that offers coffee and other F&B products of high quality, high affordability and high convenience to our customers.
+Our vision is to build a world-class coffee brand and become part of everyone's daily life.
+Technology is at the core of our business. Our technology runs across every aspect of our business, from customer engagement and storefront operations to supply chain management. We leverage our ever-evolving big data analytics and AI to analyze the huge volume of data generated from our operations and continuously optimize our systems. Our focus on technology has enabled us to efficiently elevate customer experience and to grow rapidly with uncompromised quality control.
+On March 31, 2023, we opened our first two stores in Singapore. Menus at the local stores in Singapore highlight both Signature Lattes and Americano Collection, just like what we do in China. Singapore customers get to enjoy our popular products in China such as IIAC Gold Medal Barista Coffee, Luckin Black Cup (our SOE Specialty Coffee Series) and Frappes, in addition to our best sellers like Coconut Latte, Velvet Latte, Little Butter Latte, and Orange Americano. Luckin Coffee also has the plan to develop new products uniquely tailored for the Singapore market.
+==================================================
