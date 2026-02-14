@@ -92,10 +92,10 @@ def save_results(data: Dict, filename: str) -> None:
         "combined_text": data["combined_text"].strip()
     }
     with open(file_path, mode="w", encoding="utf-8") as f:
-        f.write(f"BASE_URL: {data['base_url']}\n")
-        f.write(f"PAGES_SCRAPED: {', '.join(data['pages_scraped'])}\n")
+        f.write(f"BASE_URL: {row['base_url']}\n")
+        f.write(f"PAGES_SCRAPED: {row['pages_scraped']}\n")
         f.write("\n" + "="*50 + "\n")
-        f.write(data["combined_text"].strip())
+        f.write(row["combined_text"])
         f.write("\n" + "="*50 + "\n")
     print(f"[INFO] Successfully saved context to {file_path}")
 
